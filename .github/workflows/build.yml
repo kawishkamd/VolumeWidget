@@ -29,14 +29,17 @@ jobs:
     - name: Sign APK
       env:
         SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-        ALIAS: ${{ secrets.ALIAS }}
         KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
-        echo "$SIGNING_KEY" | base64 --decode > release.jks
+        echo "$SIGNING_KEY" | base64 -d -i > release.jks
         BUILD_TOOLS_DIR=$(ls -d /usr/local/lib/android/sdk/build-tools/* | tail -1)
+        
+        ACTUAL_ALIAS=$(keytool -list -v -keystore release.jks -storepass "$KEY_STORE_PASSWORD" | grep "Alias name:" | head -1 | awk -F': ' '{print $2}' | tr -d '\r')
+        echo "Auto-detected Alias: $ACTUAL_ALIAS"
+        
         $BUILD_TOOLS_DIR/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
-        $BUILD_TOOLS_DIR/apksigner sign --ks release.jks --ks-key-alias "$ALIAS" --ks-pass "pass:$KEY_STORE_PASSWORD" --key-pass "pass:$KEY_PASSWORD" --out app-release-signed.apk app-release-aligned.apk
+        $BUILD_TOOLS_DIR/apksigner sign --ks release.jks --ks-key-alias "$ACTUAL_ALIAS" --ks-pass "pass:$KEY_STORE_PASSWORD" --key-pass "pass:$KEY_PASSWORD" --out app-release-signed.apk app-release-aligned.apk
         rm release.jks
 
     - name: Generate SHA256 Checksum

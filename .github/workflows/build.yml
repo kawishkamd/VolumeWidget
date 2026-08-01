@@ -39,7 +39,7 @@ jobs:
         echo "Auto-detected Alias: $ACTUAL_ALIAS"
         
         $BUILD_TOOLS_DIR/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
-        $BUILD_TOOLS_DIR/apksigner sign --ks release.jks --ks-key-alias "$ACTUAL_ALIAS" --ks-pass "pass:$KEY_STORE_PASSWORD" --key-pass "pass:$KEY_PASSWORD" --out app-release-signed.apk app-release-aligned.apk
+        $BUILD_TOOLS_DIR/apksigner sign --ks release.jks --ks-key-alias "$ACTUAL_ALIAS" --ks-pass "pass:$KEY_STORE_PASSWORD" --out app-release-signed.apk app-release-aligned.apk
         rm release.jks
 
     - name: Generate SHA256 Checksum

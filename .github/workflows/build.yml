@@ -1,0 +1,54 @@
+name: Android CI/CD
+
+on:
+  push:
+    tags:
+      - 'v*' # Automatically triggers when you push a tag like 'v1.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build Release APK
+      run: ./gradlew assembleRelease
+
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+    - name: Generate SHA256 Checksum
+      run: |
+        SIGNED_APK="${{steps.sign_app.outputs.signedReleaseFile}}"
+        DIR_NAME=$(dirname "$SIGNED_APK")
+        FILE_NAME=$(basename "$SIGNED_APK")
+        cd "$DIR_NAME"
+        sha256sum "$FILE_NAME" > "$FILE_NAME.sha256"
+
+    - name: Upload to GitHub Releases
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ${{steps.sign_app.outputs.signedReleaseFile}}
+          ${{steps.sign_app.outputs.signedReleaseFile}}.sha256
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

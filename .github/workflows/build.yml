@@ -27,29 +27,27 @@ jobs:
       run: ./gradlew assembleRelease
 
     - name: Sign APK
-      uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-        buildToolsVersion: 34.0.0
+      env:
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+        ALIAS: ${{ secrets.ALIAS }}
+        KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        echo "$SIGNING_KEY" | base64 --decode > release.jks
+        BUILD_TOOLS_DIR=$(ls -d /usr/local/lib/android/sdk/build-tools/* | tail -1)
+        $BUILD_TOOLS_DIR/zipalign -v -p 4 app/build/outputs/apk/release/app-release-unsigned.apk app-release-aligned.apk
+        $BUILD_TOOLS_DIR/apksigner sign --ks release.jks --ks-key-alias "$ALIAS" --ks-pass "pass:$KEY_STORE_PASSWORD" --key-pass "pass:$KEY_PASSWORD" --out app-release-signed.apk app-release-aligned.apk
+        rm release.jks
 
     - name: Generate SHA256 Checksum
       run: |
-        SIGNED_APK="${{steps.sign_app.outputs.signedReleaseFile}}"
-        DIR_NAME=$(dirname "$SIGNED_APK")
-        FILE_NAME=$(basename "$SIGNED_APK")
-        cd "$DIR_NAME"
-        sha256sum "$FILE_NAME" > "$FILE_NAME.sha256"
+        sha256sum app-release-signed.apk > app-release-signed.apk.sha256
 
     - name: Upload to GitHub Releases
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ${{steps.sign_app.outputs.signedReleaseFile}}
-          ${{steps.sign_app.outputs.signedReleaseFile}}.sha256
+          app-release-signed.apk
+          app-release-signed.apk.sha256
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

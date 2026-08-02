@@ -6,6 +6,8 @@
     <string name="volume_down">Volume Down</string>
     <string name="volume_level">Current volume</string>
     <string name="volume_level_value">Volume: %1$d / %2$d</string>
-    <string name="support_creator">Support Creator</string>
-    <string name="github_repo">View Source on GitHub</string>
+    <string name="support_creator">Support</string>
+    <string name="github_repo">GitHub</string>
+    <string name="app_tagline">Open-source volume control widget</string>
+    <string name="app_instruction">Add the widget to your home screen to get started.</string>
 </resources>

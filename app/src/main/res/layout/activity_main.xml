@@ -1,48 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="32dp">
 
-    <TextView
-        android:id="@+id/tv_volume_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/volume_level"
-        android:textSize="24sp"
-        android:layout_marginBottom="24dp" />
-
-    <Button
-        android:id="@+id/btn_volume_up"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/volume_up"
+    <!-- App Icon -->
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/app_name"
         android:layout_marginBottom="16dp" />
 
-    <Button
-        android:id="@+id/btn_volume_down"
-        android:layout_width="match_parent"
+    <!-- App Name -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/volume_down"
-        android:layout_marginBottom="32dp" />
+        android:text="@string/app_name"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary" />
 
-    <Button
-        android:id="@+id/btn_support"
-        android:layout_width="match_parent"
+    <!-- Tagline -->
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/support_creator"
-        android:backgroundTint="#2196F3"
-        android:textColor="@android:color/white" />
+        android:text="@string/app_tagline"
+        android:textSize="14sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_marginTop="4dp" />
 
-    <Button
-        android:id="@+id/btn_github"
+    <!-- Instruction -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_instruction"
+        android:textSize="15sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:lineSpacingExtra="4dp" />
+
+    <!-- Spacer to push buttons to bottom area -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Bottom buttons row -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/github_repo"
-        android:backgroundTint="#24292e"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="8dp" />
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_support"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/support_creator"
+            android:textAllCaps="false"
+            android:textColor="#E57373"
+            android:layout_marginEnd="8dp"
+            app:icon="@drawable/ic_heart"
+            app:iconGravity="textStart"
+            app:iconTint="@null"
+            app:strokeColor="#40E57373" />
+
+        <Button
+            android:id="@+id/btn_github"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="@string/github_repo"
+            android:textAllCaps="false"
+            android:textColor="#78909C"
+            android:layout_marginStart="8dp"
+            app:icon="@drawable/ic_github"
+            app:iconGravity="textStart"
+            app:iconTint="@null"
+            app:strokeColor="#4078909C" />
+
+    </LinearLayout>
 
 </LinearLayout>

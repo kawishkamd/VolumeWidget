@@ -1,4 +1,4 @@
-package com.example.volumewidget
+package io.github.kawishkamd.volumewidget
 
 import android.content.Intent
 import android.net.Uri

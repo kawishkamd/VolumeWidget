@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -29,13 +28,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.example.volumewidget.ACTION_VOLUME_UP" />
-                <action android:name="com.example.volumewidget.ACTION_VOLUME_DOWN" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/volume_widget_info" />
         </receiver>
+
+        <!-- Handles widget button taps. Not exported: only this app's own PendingIntents can reach it. -->
+        <receiver
+            android:name=".VolumeButtonReceiver"
+            android:exported="false" />
 
     </application>
 

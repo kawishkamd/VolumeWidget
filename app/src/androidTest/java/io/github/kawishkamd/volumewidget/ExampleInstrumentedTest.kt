@@ -1,4 +1,4 @@
-package com.example.volumewidget
+package io.github.kawishkamd.volumewidget
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.volumewidget", appContext.packageName)
+        assertEquals("io.github.kawishkamd.volumewidget", appContext.packageName)
     }
 }

@@ -2,8 +2,11 @@ name: Android CI/CD
 
 on:
   push:
+    branches:
+      - '**' # Any branch push: build + test, APK uploaded as a workflow artifact only
     tags:
       - 'v*' # Automatically triggers when you push a tag like 'v1.0'
+  workflow_dispatch: # Manual run from the Actions tab
 
 permissions:
   contents: write
@@ -25,6 +28,9 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
+    - name: Run Unit Tests
+      run: ./gradlew testDebugUnitTest
 
     - name: Build Release APK
       run: ./gradlew assembleRelease
@@ -49,7 +55,16 @@ jobs:
       run: |
         sha256sum app-release-signed.apk > app-release-signed.apk.sha256
 
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: VolumeWidget-run${{ github.run_number }}
+        path: |
+          app-release-signed.apk
+          app-release-signed.apk.sha256
+
     - name: Upload to GitHub Releases
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
         files: |
